@@ -297,10 +297,6 @@ export default function StatsCounter({ stats, isDarkMode }: StatsCounterProps) {
           {/* Market Index Info column */}
           <div className="space-y-3 flex-1">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono tracking-widest bg-orange-500/10 text-orange-500 border border-orange-500/20 font-bold uppercase flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse" />
-                Crypto Anchor
-              </span>
               <span className="text-xs font-mono text-slate-400 flex items-center gap-0.5">
                 <Activity className="w-3.5 h-3.5" />
                 8s update freq

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Timer, Fuel, Bell, ShieldQuestion, ChevronDown, ChevronUp, MessageSquare, ExternalLink } from "lucide-react";
+import { Timer, Fuel, Bell, ShieldQuestion, ChevronDown, ChevronUp, MessageSquare, ExternalLink, BookOpen } from "lucide-react";
 
 interface CountdownTime {
   days: string;
@@ -227,6 +227,45 @@ export default function VerseExtensions({ isDarkMode }: { isDarkMode: boolean })
           </a>
         </div>
       </div>
+
+      {/* 3. VERSE COMMUNITY LEARN & EARN CARD */}
+      <div
+        id="verse-learn-earn-card"
+        className={`p-6 rounded-2xl border transition-all duration-300 ${
+          isDarkMode
+            ? "bg-slate-900 border-slate-800 shadow-xl animate-fadeIn"
+            : "bg-white border-slate-200 shadow-md animate-fadeIn"
+        }`}
+      >
+        <div className="flex items-center justify-between gap-3 mb-4">
+          <span className="bg-gradient-to-r from-emerald-600 to-teal-500 text-white text-[11px] font-mono font-bold tracking-wider px-3 py-1 rounded-full uppercase flex items-center gap-1.5">
+            <BookOpen className="w-3.5 h-3.5" />
+            Learn & Earn
+          </span>
+          <span className="text-[10px] bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-bold px-2 py-0.5 rounded font-mono uppercase">
+            Active
+          </span>
+        </div>
+
+        <h3 className="text-md font-semibold font-display tracking-tight text-slate-900 dark:text-white mb-2">
+          verse community learn and earn 👇👇
+        </h3>
+
+        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+          Gain deep blockchain knowledge and earn valuable digital assets through interactive quests.
+        </p>
+
+        <a
+          href="https://t.me/GetVerse/355506"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full inline-flex items-center justify-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-500 hover:opacity-95 active:scale-97 text-white text-xs font-bold px-4 py-2.5 rounded-lg font-mono shadow-md transition-all"
+        >
+          <ExternalLink className="w-3.5 h-3.5" />
+          Join Channel
+        </a>
+      </div>
+
     </div>
   );
 }
