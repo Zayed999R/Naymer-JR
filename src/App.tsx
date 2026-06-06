@@ -8,6 +8,7 @@ import StatsCounter from "./components/StatsCounter";
 import FloatingToast from "./components/FloatingToast";
 import VerseLogo from "./components/VerseLogo";
 import VerseExtensions from "./components/VerseExtensions";
+import CampaignAnalyticsChart from "./components/CampaignAnalyticsChart";
 
 export default function App() {
   const [stats, setStats] = useState<MonetizationStats>({
@@ -193,6 +194,9 @@ export default function App() {
             </button>
           </div>
           <StatsCounter stats={stats} isDarkMode={isDarkMode} />
+          <div className="mt-4">
+            <CampaignAnalyticsChart currentEarnings={stats.earnings} isDarkMode={isDarkMode} />
+          </div>
         </section>
 
         {/* FEED & SERVICES GRID AREA */}
