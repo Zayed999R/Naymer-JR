@@ -1,0 +1,6 @@
+{
+  "name": "Verse News Hub",
+  "description": "A highly polished, responsive news hub with interactive ad monetization and real-time statistics tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
