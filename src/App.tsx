@@ -9,6 +9,7 @@ import FloatingToast from "./components/FloatingToast";
 import VerseLogo from "./components/VerseLogo";
 import VerseExtensions from "./components/VerseExtensions";
 import CampaignAnalyticsChart from "./components/CampaignAnalyticsChart";
+import SplashGate from "./components/SplashGate";
 
 export default function App() {
   const [stats, setStats] = useState<MonetizationStats>({
@@ -19,6 +20,15 @@ export default function App() {
 
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [hasEntered, setHasEntered] = useState<boolean>(() => {
+    return sessionStorage.getItem("verse_has_entered") === "true";
+  });
+
+  const handleEnterApp = () => {
+    setHasEntered(true);
+    sessionStorage.setItem("verse_has_entered", "true");
+    pushToast("Welcome to Verse Network dApp! Earn system online.", "info");
+  };
 
   // Initialize theme from localStorage on load
   useEffect(() => {
@@ -125,6 +135,10 @@ export default function App() {
   const footerAd = MOCK_ADS.find((a) => a.type === "footer") || MOCK_ADS[4];
   const sidebarAds = MOCK_ADS.filter((a) => a.type === "sidebar");
 
+  if (!hasEntered) {
+    return <SplashGate onEnter={handleEnterApp} isDarkMode={isDarkMode} />;
+  }
+
   return (
     <div
       className={`min-h-screen transition-colors duration-300 font-sans ${
@@ -151,6 +165,23 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Launchpad Button to Revisit Splash Screen Gate */}
+            <button
+              id="revisit-splash-btn"
+              onClick={() => {
+                sessionStorage.removeItem("verse_has_entered");
+                setHasEntered(false);
+              }}
+              title="Return to Launch Entrance"
+              className={`px-3 py-2 text-xs font-mono font-bold rounded-xl border transition-all flex items-center gap-1.5 cursor-pointer ${
+                isDarkMode
+                  ? "bg-slate-900/60 border-slate-800 text-indigo-300 hover:bg-slate-800 hover:text-white"
+                  : "bg-white border-slate-200 text-indigo-600 hover:bg-slate-100"
+              }`}
+            >
+              <span>🚀</span> Intro Screen
+            </button>
+
             {/* Theme Toggle Button */}
             <button
               id="theme-toggle"

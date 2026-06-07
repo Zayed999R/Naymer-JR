@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
-import { TrendingUp, TrendingDown, RefreshCw, Radio, DollarSign, Activity } from "lucide-react";
+import { TrendingUp, TrendingDown, RefreshCw, Radio, DollarSign, Activity, Gift, Award, ShieldAlert, ShieldCheck, Search, CheckCircle2, User, ExternalLink } from "lucide-react";
 import { MonetizationStats } from "../types";
+import VerseLogo from "./VerseLogo";
+import DailyMissionsModal from "./DailyMissionsModal";
 
 interface StatsCounterProps {
   stats: MonetizationStats;
@@ -14,6 +16,22 @@ interface PricePoint {
 }
 
 export default function StatsCounter({ stats, isDarkMode }: StatsCounterProps) {
+  // Reward option states
+  const [showMissions, setShowMissions] = useState<boolean>(false);
+  const [missionStarted, setMissionStarted] = useState<boolean>(false);
+  const [isTelegramModalOpen, setIsTelegramModalOpen] = useState<boolean>(false);
+  const [telegramUsername, setTelegramUsername] = useState<string>("");
+  const [isTelegramSaved, setIsTelegramSaved] = useState<boolean>(false);
+  const [telegramUserId, setTelegramUserId] = useState<string>("");
+  const [isCheckingReport, setIsCheckingReport] = useState<boolean>(false);
+  const [reportCheckResult, setReportCheckResult] = useState<{
+    scanned: boolean;
+    hasReport: boolean;
+    statusText: string;
+    score: number;
+    details: string;
+  } | null>(null);
+
   // Live market price states
   const [btcPrice, setBtcPrice] = useState<number>(97450.0);
   const [btcChange24h, setBtcChange24h] = useState<number>(3.84);
@@ -350,6 +368,145 @@ export default function StatsCounter({ stats, isDarkMode }: StatsCounterProps) {
         </div>
       </div>
 
+      {/* REWARD OPTION & DAILY VERSE MISSIONS PANEL */}
+      <div 
+        className={`p-5 rounded-2xl border transition-all duration-300 ${
+          isDarkMode 
+            ? "bg-slate-900 border-slate-800 text-white shadow-xl shadow-slate-950/20" 
+            : "bg-white border-slate-200 text-slate-900 shadow-md"
+        }`}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-amber-500/10 text-amber-500 rounded-xl relative animate-pulse">
+              <Gift className="w-5.5 h-5.5" />
+              <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white dark:border-slate-900" />
+            </div>
+            <div>
+              <p className="text-[10px] font-mono tracking-wider font-semibold uppercase text-slate-400">
+                Earning Boost Program
+              </p>
+              <h3 className="text-sm font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 font-display">
+                Verse Rewards Option
+              </h3>
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              setShowMissions(!showMissions);
+            }}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-extrabold font-mono transition-all duration-200 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 active:scale-95 shadow-md self-start sm:self-center"
+          >
+            <span>🎁</span> {showMissions ? "Hide Mission Options" : "Reward Option"}
+          </button>
+        </div>
+
+        {/* Collapsible Daily Verse Missions section */}
+        {showMissions && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            transition={{ duration: 0.25 }}
+            className="mt-4 pt-4 border-t border-slate-800/10 dark:border-slate-200/5 overflow-hidden"
+          >
+            <div className="daily-mission p-5 rounded-xl bg-slate-950/40 border border-slate-800/80 space-y-4 shadow-inner">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+                <h2 className="text-sm font-bold text-white flex items-center gap-1.5 font-display uppercase tracking-wide">
+                  🎯 Daily Verse Missions
+                </h2>
+                <div className="flex items-center gap-1 text-[10px] bg-indigo-500/10 text-indigo-400 font-mono px-2.5 py-0.5 rounded-full border border-indigo-500/20">
+                  <VerseLogo className="w-3.5 h-3.5" />
+                  Ecosystem
+                </div>
+              </div>
+              
+              <p className="text-xs text-slate-400 leading-relaxed font-sans">
+                Complete daily tasks, stay active in the Verse community, and unlock achievements by exploring different features of the platform.
+              </p>
+
+              <ul className="space-y-2 text-xs font-mono text-slate-300">
+                <li className="flex items-center gap-2 text-emerald-400 bg-slate-900/30 p-2 rounded-lg border border-slate-800/40">
+                  <span className="text-emerald-500 flex items-center justify-center bg-emerald-500/10 rounded-full p-0.5">✔</span> Generate 3 usernames
+                </li>
+                <li className="flex items-center justify-between gap-2 text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/15 transition-all">
+                  <span className="flex items-center gap-2">
+                    <span className="text-emerald-500 flex items-center justify-center bg-emerald-500/20 rounded-full p-0.5">✔</span>
+                    <span className="font-bold text-slate-200">Visit Verse News</span>
+                  </span>
+                  <a 
+                    href="https://t.me/GetVerse/476423" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center gap-1.5 text-[10px] bg-emerald-500 text-slate-950 px-3 py-1 rounded font-mono font-bold hover:bg-emerald-400 hover:scale-105 active:scale-95 transition-all uppercase"
+                    id="visit-verse-news-link"
+                  >
+                    Visit <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </li>
+                <li className="flex items-center gap-2 text-emerald-400 bg-slate-900/30 p-2 rounded-lg border border-slate-800/40">
+                  <span className="text-emerald-500 flex items-center justify-center bg-emerald-500/10 rounded-full p-0.5">✔</span> Join Scavenger Hunt page
+                </li>
+                <li className="flex items-center gap-2 text-emerald-400 bg-slate-900/30 p-2 rounded-lg border border-slate-800/40">
+                  <span className="text-emerald-500 flex items-center justify-center bg-emerald-500/10 rounded-full p-0.5">✔</span> Share your generated username
+                </li>
+              </ul>
+                 {/* TELEGRAM PROFILE TRACKING & ABUSE REPORT VERIFICATION (LAUNCH MODAL BUTTON) */}
+              <div className="p-4 rounded-xl border border-slate-800 bg-slate-900/40 space-y-4 shadow-inner mt-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/60 pb-3 mb-1">
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-200 flex items-center gap-1.5 font-display uppercase tracking-wider">
+                      👤 VERSE TELEGRAM TRACKING HUB
+                    </h4>
+                    <p className="text-[10px] text-slate-400 font-sans mt-0.5">
+                      Verify your account standing and link username for automatic rewards tracking.
+                    </p>
+                  </div>
+                  {/* BUTTON TO TRIGGER OUR DYNAMIC COMPREHENSIVE MODAL */}
+                  <button
+                    onClick={() => setIsTelegramModalOpen(true)}
+                    className="text-xs bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-mono font-bold px-4 py-2 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer hover:scale-105 active:scale-95 shadow-md shrink-0 select-none"
+                    id="open-tg-modal-btn"
+                  >
+                    <span>💬</span> Open Daily Missions Modal
+                  </button>
+                </div>
+                
+                <p className="text-[11px] text-zinc-400 leading-relaxed font-sans">
+                  The Daily Missions system allows you to check active reports on your Telegram ID, set your Telegram handle, and visit the Verse news ecosystem channel securely.
+                </p>
+              </div>
+
+              {/* MISSION ACTIVE STATUS CONTROLLER AREA */}
+              <div className="space-y-3 pt-3">
+                <div 
+                  onClick={() => setIsTelegramModalOpen(true)}
+                  className="rounded-lg bg-emerald-500/5 hover:bg-emerald-500/10 border border-emerald-500/20 p-3 flex items-center justify-between cursor-pointer transition-all active:scale-99"
+                >
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                    <span className="text-xs font-mono font-bold text-emerald-400">
+                      TRACKING AND VERIFICATION ACTIVE
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-slate-400 font-mono hover:text-white transition-colors">
+                    Click to configure username ➔
+                  </span>
+                </div>
+
+                <button 
+                  onClick={() => setIsTelegramModalOpen(true)}
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-mono text-xs font-bold shadow-md transition-all active:scale-97 cursor-pointer bg-gradient-to-r from-emerald-500 to-teal-500 hover:opacity-95 text-white"
+                  id="start-mission-btn"
+                >
+                  {missionStarted ? "Mission Active (In Progress) ⚡" : "Start Daily Verse missions"}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </div>
+
       {/* BTC LIVE TRACKER DIRECTORY & INTERACTIVE CONVERTER */}
       <div 
         className={`p-5 rounded-2xl border transition-all duration-300 ${
@@ -444,6 +601,13 @@ export default function StatsCounter({ stats, isDarkMode }: StatsCounterProps) {
 
       </div>
 
+      {/* DYNAMIC TELEGRAM PROFILE TRACKING & SCAM REPORT FINDER MODAL */}
+      <DailyMissionsModal 
+        isOpen={isTelegramModalOpen} 
+        onClose={() => setIsTelegramModalOpen(false)} 
+        isDarkMode={isDarkMode} 
+      />
+      
       {/* HIDDEN / UNDER-THE-HOOD ANALYTICS TELEMETRY */}
       {/* Keeping these IDs alive in hidden tag nodes so the ad monetization and verification flows do not break because of element missing checks */}
       <div className="hidden pointer-events-none select-none opacity-0" aria-hidden="true">
